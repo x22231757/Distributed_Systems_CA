@@ -2,14 +2,16 @@ syntax = "proto3";
 
 package attendance;
 
-service AttendanceRegister {
-  rpc checkAttendence (CodeRequest) returns (Code)
+service AttendanceService {
+  rpc checkAttendance (AttendanceRequest) returns (AttendanceResponse){}
 }
 
-message CodeRequest {
-  string request = 1;
+message AttendanceRequest {
+  string studentNameRequest = 1;
+  string codeRequest = 2;
 }
 
-message Code {
-  string code = 1;
+message AttendanceResponse {
+  string message = 1;
+  sint32 result = 2;
 }
