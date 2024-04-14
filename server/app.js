@@ -1,8 +1,16 @@
 var grpc = require("@grpc/grpc-js")
 var protoLoader = require("@grpc/proto-loader")
+
+//This is for attendance service
 var PROTO_PATH = __dirname + "/protos/attendance.proto"
 var packageDefinition = protoLoader.loadSync(PROTO_PATH)
 var attendance_proto = grpc.loadPackageDefinition(packageDefinition).attendance
+
+//This is for Educational Portal service
+var PROTO_PATH_EDUCATIONAL_PORTAL = __dirname + "/protos/education_portal.proto"
+var packageDefinitionEducationPortal = protoLoader.loadSync(PROTO_PATH_EDUCATIONAL_PORTAL)
+var education_portal_proto = grpc.loadPackageDefinition(packageDefinitionEducationPortal).education_portal
+
 
 var studentList = [
   {studentName: "John, Smith", attendance:0, daysPresent: 19, daysAbsent: 2, percentagePresent:90 },
@@ -77,6 +85,41 @@ function getLastMonthAttendanceStats(call, callback){
     message: "Error Occured."
   })}
 }
+
+var geographyTestAnswers = [
+  {questionNumber: 1,  answer: "Equator"},
+  {questionNumber: 2,  answer: "Parallels"},
+  {questionNumber: 3,  answer: "Prime Meridian"},
+  {questionNumber: 4,  answer: "Meridians"},
+  {questionNumber: 5,  answer: "True"}
+]
+
+function completeQuiz(call, callback){
+   var numberAnwersCorrect = 0
+   var numberAnwersWrong = 0
+
+   call.on('data', function(request){
+     if (request.quiz_answer = geographyTestAnswers[i].answer) {
+       numberAnwersCorrect += 1
+     }else {
+       numberAnwersWrong += 1
+     }
+   })
+
+   call.on('end', function(){
+     callback(null, {
+       numberAnwersCorrect : numberAnwersCorrect,
+       numberAnwersWrong: numberAnwersWrong
+     })
+   })
+   call .on('error', function(e){
+     console.log('An error occured ')
+ })
+}
+
+
+
+
 
 var server = new grpc.Server()
 server.addService(attendance_proto.AttendanceService.service, {
