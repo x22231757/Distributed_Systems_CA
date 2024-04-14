@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package education_portal;
+
+service EducationPortalService {
+  rpc completeQuiz(stream QuestionAnswers) returns (Result){}
+
+}
+message QuestionAnswers{
+  string answer = 1;
+}
+
+message Result{
+  uint32 numberAnwersCorrect = 1;
+  uint32 numberAnwersWrong = 2;
+}
