@@ -4,14 +4,33 @@ package attendance;
 
 service AttendanceService {
   rpc checkAttendance (AttendanceRequest) returns (AttendanceResponse){}
+  rpc getAttendanceList (AttendanceListRequest) returns (stream AttendanceListResponse){}
+  rpc getLastMonthAttendanceStats (AttendanceStatsRequest) returns (stream AttendanceStatsResponse){}
 }
+
 
 message AttendanceRequest {
   string studentNameRequest = 1;
   string codeRequest = 2;
 }
-
 message AttendanceResponse {
   string message = 1;
-  sint32 result = 2;
+  uint32 result = 2;
+}
+
+
+message AttendanceListRequest {
+}
+message AttendanceListResponse {
+  string studentName = 1;
+  uint32 present = 2;
+}
+
+message AttendanceStatsRequest {
+}
+message AttendanceStatsResponse {
+  string studentName = 1;
+  uint32 daysPresent = 2;
+  uint32 daysAbsent= 3;
+  uint64 percentagePresent = 4;
 }
