@@ -5,14 +5,14 @@ var packageDefinition = protoLoader.loadSync(PROTO_PATH)
 var attendance_proto = grpc.loadPackageDefinition(packageDefinition).attendance
 
 var studentList = [
-  {studentName: "John, Smith", attendence: 0},
-  {studentName: "Sally, Robinson", attendence: 0},
-  {studentName: "Mary, Reilley", attendance:0},
-  {studentName: "Vera, Smith", attendance:0},
-  {studentName: "Linda, Gilmore", attendance:0}
+  {studentName: "John, Smith", attendance:0, daysPresent: 19, daysAbsent: 2, percentagePresent:90 },
+  {studentName: "Sally, Robinson", attendance:0,  daysPresent: 17, daysAbsent: 4, percentagePresent:81},
+  {studentName: "Mary, Reilley", attendance:0,  daysPresent: 20, daysAbsent: 1, percentagePresent:95},
+  {studentName: "Vera, Smith", attendance:0,  daysPresent: 19, daysAbsent: 2, percentagePresent:90},
+  {studentName: "Linda, Gilmore", attendance:0,  daysPresent: 21, daysAbsent: 0, percentagePresent:100}
 ]
 
-var attendenceCode = "1T70A"
+var attendanceCode = "1T70A"
 
 function checkAttendance(call, callback){
   try{
@@ -22,16 +22,16 @@ function checkAttendance(call, callback){
       (temp) => temp["studentName"] === studentNameRequest
       );
     if(objIndex !=-1){
-      if (codeRequest == attendenceCode) {
+      if (codeRequest == attendanceCode) {
             studentList[objIndex].attendance = 1
             callback(null, {
-              message : "Success, your attendence has been recorded.",
+              message : "Success, your attendance has been recorded.",
               result: studentList[objIndex].attendance
             })
 
       } else {
         callback(null, {
-          message : "The attendence code is wrong please enter the correct code.",
+          message : "The attendance code is wrong please enter the correct code.",
           result: studentList[objIndex].attendance
       })
       }
@@ -46,8 +46,44 @@ function checkAttendance(call, callback){
   })}
 }
 
+function getAttendanceList(call, callback){
+  try{
+    for(var i = 0; i < studentList.length; i++){
+      call.write({
+        studentName: studentList[i].studentName,
+        present: studentList[i].attendance
+      })
+    }
+    call.end()
+  }catch(e){
+    callback(null,{
+    message: "Error Occured."
+  })}
+}
+
+function getLastMonthAttendanceStats(call, callback){
+  try{
+    for(var i = 0; i < studentList.length; i++){
+      call.write({
+        studentName: studentList[i].studentName,
+        daysPresent: studentList[i].daysPresent,
+        daysAbsent: studentList[i].daysAbsent,
+        percentagePresent:studentList[i].percentagePresent ,
+      })
+    }
+    call.end()
+  }catch(e){
+    callback(null,{
+    message: "Error Occured."
+  })}
+}
+
 var server = new grpc.Server()
-server.addService(attendance_proto.AttendanceService.service, {checkAttendance:checkAttendance})
+server.addService(attendance_proto.AttendanceService.service, {
+  checkAttendance:checkAttendance,
+  getAttendanceList: getAttendanceList,
+  getLastMonthAttendanceStats : getLastMonthAttendanceStats
+ })
 
 server.bindAsync("0.0.0.0:40000", grpc.ServerCredentials.createInsecure(),
   function(){
