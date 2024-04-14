@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package attendance;
+
+service AttendanceRegister {
+  rpc checkAttendence (CodeRequest) returns (Code)
+}
+
+message CodeRequest {
+  string request = 1;
+}
+
+message Code {
+  string code = 1;
+}
