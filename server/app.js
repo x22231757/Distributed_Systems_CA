@@ -11,6 +11,11 @@ var PROTO_PATH_EDUCATIONAL_PORTAL = __dirname + "/protos/education_portal.proto"
 var packageDefinitionEducationPortal = protoLoader.loadSync(PROTO_PATH_EDUCATIONAL_PORTAL)
 var education_portal_proto = grpc.loadPackageDefinition(packageDefinitionEducationPortal).education_portal
 
+//This is for chat service
+var PROTO_PATH_CHAT = __dirname + "/protos/chat.proto"
+var packageDefinitionEducationPortal = protoLoader.loadSync(PROTO_PATH_CHAT)
+var education_portal_proto = grpc.loadPackageDefinition(packageDefinitionEducationPortal).chat
+
 
 var studentList = [
   {studentName: "John, Smith", attendance:0, daysPresent: 19, daysAbsent: 2, percentagePresent:90 },
@@ -118,6 +123,26 @@ function completeQuiz(call, callback){
 }
 
 
+function uploadQuiz(call, callback){
+   var numOfQuestions = 0
+
+
+   call.on('data', function(request){
+     numOfQuestions +=1
+   })
+
+   call.on('end', function(){
+     var quizRefNumber = new Date().valueOf();
+
+     callback(null, {
+       numOfQuestions  : numOfQuestions ,
+       quizRefNumber : quizRefNumber
+     })
+   })
+   call .on('error', function(e){
+     console.log('An error occured ')
+ })
+}
 
 
 
@@ -127,6 +152,11 @@ server.addService(attendance_proto.AttendanceService.service, {
   getAttendanceList: getAttendanceList,
   getLastMonthAttendanceStats : getLastMonthAttendanceStats
  })
+
+ server.addService(education_portal_proto.EducationPortalService.service, {
+   uploadQuiz:uploadQuiz
+
+  })
 
 server.bindAsync("0.0.0.0:40000", grpc.ServerCredentials.createInsecure(),
   function(){
