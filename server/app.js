@@ -13,8 +13,10 @@ var education_portal_proto = grpc.loadPackageDefinition(packageDefinitionEducati
 
 //This is for chat service
 var PROTO_PATH_CHAT = __dirname + "/protos/chat.proto"
-var packageDefinitionEducationPortal = protoLoader.loadSync(PROTO_PATH_CHAT)
-var education_portal_proto = grpc.loadPackageDefinition(packageDefinitionEducationPortal).chat
+var packageDefinitionChat = protoLoader.loadSync(PROTO_PATH_CHAT)
+var chat_proto = grpc.loadPackageDefinition(packageDefinitionChat).chat
+
+var clients = {}
 
 
 var studentList = [
@@ -145,6 +147,34 @@ function uploadQuiz(call, callback){
 }
 
 
+function sendMessage(call){
+   call.on('data', function(chat_message){
+      if(!(chat_message.name in clients)){
+         clients[chat_message .name] = {
+            name : chat_message.name,
+            call : call
+          }
+        }
+        for(var client in clients){
+           clients[client].call .write({
+              name : chat_message.name,
+              message : chat_message.message
+            })
+          }
+    });
+
+  call.on('end', function(){
+     call.end() ;
+  })
+
+  call.on('error', function(e){
+    console.log(e)
+  })
+}
+
+
+
+
 
 var server = new grpc.Server()
 server.addService(attendance_proto.AttendanceService.service, {
@@ -157,6 +187,8 @@ server.addService(attendance_proto.AttendanceService.service, {
    uploadQuiz:uploadQuiz
 
   })
+ server.addService(chat_proto.ChatService.service, { sendMessage:sendMessage })
+
 
 server.bindAsync("0.0.0.0:40000", grpc.ServerCredentials.createInsecure(),
   function(){
