@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package smart_equipment;
+
+service SmartEquipmentService {
+  rpc turnOnSmartboard (turnOnRequest) returns (turnOnConfirmation){}
+  rpc turnOnSmartboard (turnOffRequest) returns (turnOffConfirmation){}
+  rpc configureSmartboardParameters (stream configureRequest) returns (configureConfirmation){}
+  rpc monitorStudentDigitalActivity (stream configureRequest) returns (configureConfirmation){}
+}
+
+
+message turnOnRequest {
+}
+
+message turnOnConfirmation {
+  string onConfirmation = 1;
+}
+
+message turnOffRequest {
+}
+
+message turnOffConfirmation {
+  string offConfirmation = 1;
+}
