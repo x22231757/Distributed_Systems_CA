@@ -74,7 +74,8 @@ if(service === 1 ) { // Attendance service start
 
   var education_portal_action = readlineSync.question (
     "What would you like to do? \n"
-  + " \t 1 to complte a quiz \n")
+  + " \t 1 to complete a quiz \n"
+  + " \t 2 to upload a quiz \n")
 
 
   education_portal_action = parseInt(education_portal_action)
@@ -109,5 +110,27 @@ if(service === 1 ) { // Attendance service start
      call .end()
 
 
+  }else if (education_portal_action === 2) {
+    var call = client.uploadQuiz(function(error, response){
+       if(error){
+          console.log("An error has occured")
+        }else{
+         console.log("Your Quiz has been uploaded into the Quiz database. Your Quiz contains: " + response.numOfQuestions + " number of questions.  Your code quiz unique identifying reference code : " + response.quizRefNumber)
+      }
+   })
+
+   var questionNumber = 0
+   while(true){
+    questionNumber +=1
+    var quizQuestion = readlineSync.question("Please enter your question" + questionNumber + " (q to Quit) : ")
+    if(quizQuestion.toLowerCase() === "q"){
+       break
+    }
+
+    call.write({
+       quizQuestion : quizQuestion,
+     })
+   }
+   call .end()
   }
-}//Educational portal service start
+}//Educational portal service ends
