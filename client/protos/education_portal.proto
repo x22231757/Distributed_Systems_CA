@@ -4,7 +4,7 @@ package education_portal;
 
 service EducationPortalService {
   rpc completeQuiz(stream QuestionAnswers) returns (Result){}
-  rpc uploadQuiz()
+  rpc uploadQuiz(stream QuizQuestion) returns (UploadConfirmation){}
 
 }
 message QuestionAnswers{
@@ -14,4 +14,13 @@ message QuestionAnswers{
 message Result{
   uint32 numberAnwersCorrect = 1;
   uint32 numberAnwersWrong = 2;
+}
+
+message QuizQuestion{
+  string quizQuestion = 1;
+}
+
+message UploadConfirmation{
+  uint32 numOfQuestions = 1;
+  uint32 quizRefNumber = 2;
 }
