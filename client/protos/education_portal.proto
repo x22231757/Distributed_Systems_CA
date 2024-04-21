@@ -3,18 +3,10 @@ syntax = "proto3";
 package education_portal;
 
 service EducationPortalService {
-  rpc completeQuiz(stream QuestionAnswers) returns (Result){}
   rpc uploadQuiz(stream QuizQuestion) returns (UploadConfirmation){}
 
 }
-message QuestionAnswers{
-  string answer = 1;
-}
 
-message Result{
-  uint32 numberAnwersCorrect = 1;
-  uint32 numberAnwersWrong = 2;
-}
 
 message QuizQuestion{
   string quizQuestion = 1;
