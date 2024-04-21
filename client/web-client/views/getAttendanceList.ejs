@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+    <a href="/">Check In Attendence</a>
+    <a href="/getAttendanceList">Get Attendance List</a>
+    <a href="/getLastMonthAttendanceStats">Get Last Month Attendance Stats</a>
+
+
+    <% if(error) { %>
+      <%= error %>
+    <% } %>
+
+    <form action="/getAttendanceList" method="get">
+      <button type="submit">Check in attendence!</button>
+    </form>
+
+    <% if(!isNaN(present)) { %>
+      <b>studentName:</b><%= studentName %>
+      <b>present:</b><%= present %>
+    <% } %>
+
+
+  </body>
+</html>

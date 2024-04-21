@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+    <a href="/">Check In Attendence</a>
+    <a href="/getAttendanceList">Get Attendance List</a>
+    <a href="/getLastMonthAttendanceStats">Get Last Month Attendance Stats</a>
+
+
+    <% if(error) { %>
+      <%= error %>
+    <% } %>
+
+    <form action="/" method="get">
+      <label for="studentNameRequest">studentNameRequest</label>
+      <input type="string" name="studentNameRequest">
+      <br/>
+      <label for="codeRequest">codeRequest</label>
+      <input type="string" name="codeRequest">
+      <button type="submit">Check in attendence!</button>
+    </form>
+
+    <% if(!isNaN(result)) { %>
+      <b>ANS:</b><%= result %>
+      <b>Message:</b><%= message %>
+    <% } %>
+
+
+  </body>
+</html>
