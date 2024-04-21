@@ -72,7 +72,7 @@ function getAttendanceList(call, callback){
     call.end()
   }catch(e){
     callback(null,{
-    message: "Error Occured."
+    message: "Error Occurred."
   })}
 }
 
@@ -89,40 +89,10 @@ function getLastMonthAttendanceStats(call, callback){
     call.end()
   }catch(e){
     callback(null,{
-    message: "Error Occured."
+    message: "Error Occurred."
   })}
 }
 
-var geographyTestAnswers = [
-  {questionNumber: 1,  answer: "Equator"},
-  {questionNumber: 2,  answer: "Parallels"},
-  {questionNumber: 3,  answer: "Prime Meridian"},
-  {questionNumber: 4,  answer: "Meridians"},
-  {questionNumber: 5,  answer: "True"}
-]
-
-function completeQuiz(call, callback){
-   var numberAnwersCorrect = 0
-   var numberAnwersWrong = 0
-
-   call.on('data', function(request){
-     if (request.quiz_answer = geographyTestAnswers[i].answer) {
-       numberAnwersCorrect += 1
-     }else {
-       numberAnwersWrong += 1
-     }
-   })
-
-   call.on('end', function(){
-     callback(null, {
-       numberAnwersCorrect : numberAnwersCorrect,
-       numberAnwersWrong: numberAnwersWrong
-     })
-   })
-   call .on('error', function(e){
-     console.log('An error occured ')
- })
-}
 
 
 function uploadQuiz(call, callback){
@@ -140,9 +110,10 @@ function uploadQuiz(call, callback){
        numOfQuestions  : numOfQuestions ,
        quizRefNumber : quizRefNumber
      })
+     console.log("Your quiz has been uploaded.");
    })
    call .on('error', function(e){
-     console.log('An error occured ')
+     console.log('An error occurred ')
  })
 }
 
