@@ -4,6 +4,7 @@ var protoLoader = require("@grpc/proto-loader")
 var readline = require('readline')
 
 //specify which service would you like to use:
+
 var service = readlineSync.question (
   "Which service would you like to use? \n"
 + " \t 1 for Atendance Service \n"
@@ -76,42 +77,10 @@ if(service === 1 ) { // Attendance service start
 
   var education_portal_action = readlineSync.question (
     "What would you like to do? \n"
-  + " \t 1 to complete a quiz \n"
-  + " \t 2 to upload a quiz \n")
+  + " \t 1 to upload a quiz \n")
 
   education_portal_action = parseInt(education_portal_action)
-  if(education_portal_action === 1 ) {
-
-
-    var call = client.completeQuiz(function(error, response){
-       if(error){
-          console .log("An error has occured")
-      }else{
-        console .log("You have ordered " + response .books + " the total cost is : " + response .price )
-      }
-    })
-
-    var geographyTestQuestions = [
-      {questionNumber: 1, question: "What is the imaginary line that divides the world around the middle and runs West to East? Answer: "},
-      {questionNumber: 2, question: "What are the lines running parallel to the equator? Answer: "},
-      {questionNumber: 3, question: "What is the imaginary line that runs from the North Pole to the South Pole and runs through Greenwich, England? Answer: "},
-      {questionNumber: 4, question: "What are the lines running parallel to the Prime Meridian? Answer: "},
-      {questionNumber: 5, question: "True or False - the parallels mesure latitude and the meridians measure longitude? Answer: "}
-    ]
-
-    for (var i = 0; i < geographyTestQuestions.length; i++){
-       var quiz_answer = readlineSync.question(geographyTestQuestions[i].question)
-       if(quiz_answer.toLowerCase() === "q"){
-         break
-       }
-       call.write({
-         quiz_answer  :quiz_answer ,
-       })
-     }
-     call .end()
-
-
-  }else if (education_portal_action === 2) {
+  if (education_portal_action === 1) {
     var call = client.uploadQuiz(function(error, response){
        if(error){
           console.log("An error has occured")
@@ -123,7 +92,7 @@ if(service === 1 ) { // Attendance service start
    var questionNumber = 0
    while(true){
     questionNumber +=1
-    var quizQuestion = readlineSync.question("Please enter your question" + questionNumber + " (q to Quit) : ")
+    var quizQuestion = readlineSync.question("Please enter your question " + questionNumber + " (q to Quit) : ")
     if(quizQuestion.toLowerCase() === "q"){
        break
     }
@@ -134,6 +103,8 @@ if(service === 1 ) { // Attendance service start
    }
    call .end()
   }
+
+
 } else if(service ===3){//Educational portal service ends; Chat service starts
     var PROTO_PATH = __dirname + "/protos/chat.proto"
     var packageDefinition = protoLoader.loadSync(PROTO_PATH)
@@ -144,7 +115,7 @@ if(service === 1 ) { // Attendance service start
     var call = client.sendMessage();
 
     call.on('data', function(resp){
-       console.log(resp .name + ': ' + resp .message )
+       console.log(resp.name + ': ' + resp.message )
     }) ;
 
     call.on('end', function(){
